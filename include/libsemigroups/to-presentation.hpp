@@ -198,6 +198,58 @@ namespace libsemigroups {
 #endif
 
   ////////////////////////////////////////////////////////////////////////
+  // Kambites -> Presentation
+  ////////////////////////////////////////////////////////////////////////
+
+  //! \ingroup to_presentation_group
+  //!
+  //! \brief Make a presentation from a kambites
+  //!
+  //! Defined in `to-presentation.hpp`
+  //!
+  //! Despite the hideous signature, this function should be invoked as follows:
+  //!
+  //! \code
+  //! to<Presentation<Word>>(k);
+  //! \endcode
+  //!
+  //! There are two versions of this function:
+  //!
+  //! 1. When `typename Result::word_type` and `Word` are not the same, this
+  //! function uses `to<Presentation<typename Result::word_type>` to return a
+  //! presentation equivalent to the object used to construct or initialise the
+  //! Kambites object (if any) but of a different type (for example, can be used
+  //! to convert from `std::string` to \ref word_type).
+  //!
+  //! 2. If the word representations are the same, the function returns a
+  //! reference to the presentation used to construct or initialise the Kambites
+  //! object (if any) via `k.presentation()`.
+  //!
+  //! \tparam Result the return type, also used for SFINAE, should be
+  //! \c Presentation<T> for some type \c T.
+  //! \tparam Word the type of the words in the input Kambites.
+  //! \param k the Kambites object from which to obtain the rules.
+  //!
+  //! \returns A value of type `Presentation<Word>`.
+  template <typename Result, typename Word>
+  auto to(Kambites<Word>& k) -> std::enable_if_t<
+      std::is_same_v<Presentation<typename Result::word_type>, Result>
+          && !std::is_same_v<typename Result::word_type, Word>,
+      Result> {
+    return v4::to<Result>(k.presentation());
+  }
+
+  // This function is documented above because Doxygen conflates these two
+  // functions
+  template <typename Result, typename Word>
+  auto to(Kambites<Word>& k) -> std::enable_if_t<
+      std::is_same_v<Presentation<typename Result::word_type>, Result>
+          && std::is_same_v<typename Result::word_type, Word>,
+      Result const&> {
+    return k.presentation();
+  }
+
+  ////////////////////////////////////////////////////////////////////////
   // Presentation + function -> Presentation
   ////////////////////////////////////////////////////////////////////////
 
@@ -207,16 +259,17 @@ namespace libsemigroups {
   //!
   //! Defined in `to-presentation.hpp`.
   //!
-  //! Despite the hideous signature, this function should be invoked as follows:
+  //! Despite the hideous signature, this function should be invoked as
+  //! follows:
   //!
   //! \code
   //! to<Presentation<Word>>(p, func);
   //! \endcode
   //!
-  //! This function returns a presentation equivalent to the input presentation
-  //! but of a different type (for example, can be used to convert from
-  //! `std::string` to \ref word_type). The second parameter specifies how to
-  //! map the letters of one presentation to the other.
+  //! This function returns a presentation equivalent to the input
+  //! presentation but of a different type (for example, can be used to
+  //! convert from `std::string` to \ref word_type). The second parameter
+  //! specifies how to map the letters of one presentation to the other.
   //!
   //! \tparam Result the return type, also used for SFINAE, should be
   //! \c Presentation<T> for some type \c T.
@@ -235,10 +288,16 @@ namespace libsemigroups {
   //! \note \c Func must be a function type that is invocable with values of
   //! `Presentation<Word>::letter_type`. If this is not true, then template
   //! substitution will fail.
+  //!
+  //! \note This function will be moved from the header `to-presentation.hpp`
+  //! to `presentation.hpp` in v4 of libsemigroups.
   template <typename Result, typename Word, typename Func>
-  auto to(Presentation<Word> const& p, Func&& f) -> std::enable_if_t<
-      std::is_same_v<Presentation<typename Result::word_type>, Result>,
-      Result>;
+  [[deprecated]] auto to(Presentation<Word> const& p, Func&& f)
+      -> std::enable_if_t<
+          std::is_same_v<Presentation<typename Result::word_type>, Result>,
+          Result> {
+    return v4::to<Result>(p, f);
+  }
 
   ////////////////////////////////////////////////////////////////////////
   // InversePresentation + function -> InversePresentation
@@ -251,15 +310,16 @@ namespace libsemigroups {
   //!
   //! Defined in `to-presentation.hpp`.
   //!
-  //! Despite the hideous signature, this function should be invoked as follows:
+  //! Despite the hideous signature, this function should be invoked as
+  //! follows:
   //!
   //! \code
   //! to<InversePresentation<Word>>(p, func);
   //! \endcode
   //!
   //! This function returns an inverse presentation equivalent to the input
-  //! inverse presentation but of a different type (for example, can be used to
-  //! convert from `std::string` to \ref word_type). The second parameter
+  //! inverse presentation but of a different type (for example, can be used
+  //! to convert from `std::string` to \ref word_type). The second parameter
   //! specifies how to map the letters of one inverse presentation to the
   //! other.
   //!
@@ -281,10 +341,16 @@ namespace libsemigroups {
   //! \note \c Func must be a function type that is invocable with values of
   //! `Presentation<Word>::letter_type`. If this is not true, then template
   //! substitution will fail.
+  //!
+  //! \note This function will be moved from the header `to-presentation.hpp`
+  //! to `presentation.hpp` in v4 of libsemigroups.
   template <typename Result, typename Word, typename Func>
-  auto to(InversePresentation<Word> const& ip, Func&& f) -> std::enable_if_t<
+  [[deprecated]] auto
+  to(InversePresentation<Word> const& ip, Func&& f) -> std::enable_if_t<
       std::is_same_v<InversePresentation<typename Result::word_type>, Result>,
-      Result>;
+      Result> {
+    return v4::to<Result>(ip, f);
+  }
 
   ////////////////////////////////////////////////////////////////////////
   // Presentation -> Presentation
@@ -296,7 +362,8 @@ namespace libsemigroups {
   //!
   //! Defined in `to-presentation.hpp`.
   //!
-  //! Despite the hideous signature, this function should be invoked as follows:
+  //! Despite the hideous signature, this function should be invoked as
+  //! follows:
   //!
   //! \code
   //! to<Presentation<Word>>(p, func);
@@ -305,18 +372,18 @@ namespace libsemigroups {
   //! There are 2 versions of this function:
   //!
   //! 1. When `typename Result::word_type` and `Word` are not the same,
-  //! this function returns a presentation equivalent to the input presentation
-  //! but of a different type (for example, can be used to convert from
-  //! `std::string` to \ref word_type).
+  //! this function returns a presentation equivalent to the input
+  //! presentation but of a different type (for example, can be used to
+  //! convert from `std::string` to \ref word_type).
   //!
   //! 2. When `typename Result::word_type` and `Word` are the same,
   //! this function just returns its argument \p p (as a reference), and is
-  //! included solely for the purpose of simplifying certain client code, where
-  //! presentations must be converted from one type to another sometimes, but
-  //! not other times.
+  //! included solely for the purpose of simplifying certain client code,
+  //! where presentations must be converted from one type to another
+  //! sometimes, but not other times.
   //!
-  //! If the alphabet of of \p p is \f$\{a_0, a_1, \dots a_{n-1}\}\f$, then the
-  //! conversion from `Presentation<WordInput>::letter_type` to
+  //! If the alphabet of of \p p is \f$\{a_0, a_1, \dots a_{n-1}\}\f$, then
+  //! the conversion from `Presentation<WordInput>::letter_type` to
   //! `Presentation<WordOutput>::letter_type` is \f$a_i \mapsto\f$
   //! `human_readable_letter<WordOutput>(size_t i)`.
   //!
@@ -327,23 +394,28 @@ namespace libsemigroups {
   //!
   //! \returns A value of type `Result`.
   //!
-  //! \throws LibsemigroupsException if `typename Result::word_type` and `Word`
-  //! are not the same and `p.throw_if_bad_alphabet_or_rules()` throws. If
-  //! `typename Result::word_type` and `Word` are the same, then this function
-  //! is `noexcept`.
+  //! \throws LibsemigroupsException if `typename Result::word_type` and
+  //! `Word` are not the same and `p.throw_if_bad_alphabet_or_rules()` throws.
+  //! If `typename Result::word_type` and `Word` are the same, then this
+  //! function is `noexcept`.
+  //!
+  //! \note This function will be moved from the header `to-presentation.hpp`
+  //! to `presentation.hpp` in v4 of libsemigroups.
   template <typename Result, typename Word>
-  auto to(Presentation<Word> const& p) -> std::enable_if_t<
+  [[deprecated]] auto to(Presentation<Word> const& p) -> std::enable_if_t<
       std::is_same_v<Presentation<typename Result::word_type>, Result>
           && !std::is_same_v<typename Result::word_type, Word>,
-      Result>;
+      Result> {
+    return v4::to<Result>(p);
+  }
 
   // This function is documented above because Doxygen conflates these two
   // functions.
   template <typename Result, typename Word>
-  auto to(Presentation<Word> const& p) noexcept
+  [[deprecated]] auto to(Presentation<Word> const& p) noexcept
       -> std::enable_if_t<std::is_same_v<Presentation<Word>, Result>,
                           Result const&> {
-    return p;
+    return v4::to<Result>(p);
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -357,7 +429,8 @@ namespace libsemigroups {
   //!
   //! Defined in `to-presentation.hpp`.
   //!
-  //! Despite the hideous signature, this function should be invoked as follows:
+  //! Despite the hideous signature, this function should be invoked as
+  //! follows:
   //!
   //! \code
   //! to<InversePresentation<Word>>(ip);
@@ -367,13 +440,13 @@ namespace libsemigroups {
   //!
   //! 1. When `typename Result::word_type` and `Word` are not the same,
   //! this function returns an inverse presentation equivalent to the input
-  //! inverse presentation but of a different type (for example, can be used to
-  //! convert from `std::string` to \ref word_type).
+  //! inverse presentation but of a different type (for example, can be used
+  //! to convert from `std::string` to \ref word_type).
   //!
   //! 2. When `typename Result::word_type` and `Word` are the same,
   //! this function just returns its argument \p ip (as a reference), and is
-  //! included solely for the purpose of simplifying certain client code, where
-  //! inverse presentations must be converted from one type to another
+  //! included solely for the purpose of simplifying certain client code,
+  //! where inverse presentations must be converted from one type to another
   //! sometimes, but not other times.
   //!
   //! If the alphabet of of \p ip is \f$\{a_0, a_1, \dots a_{n-1}\}\f$, then
@@ -389,28 +462,29 @@ namespace libsemigroups {
   //!
   //! \returns A value of type `InversePresentation<WordOutput>`.
   //!
-  //! \throws LibsemigroupsException if `typename Result::word_type` and `Word`
-  //! are not the same and `p.throw_if_bad_alphabet_or_rules()` throws. If
-  //! `typename Result::word_type` and `Word` are the same, then this function
-  //! is `noexcept`.
+  //! \throws LibsemigroupsException if `typename Result::word_type` and
+  //! `Word` are not the same and `p.throw_if_bad_alphabet_or_rules()` throws.
+  //! If `typename Result::word_type` and `Word` are the same, then this
+  //! function is `noexcept`.
+  //!
+  //! \note This function will be moved from the header `to-presentation.hpp`
+  //! to `presentation.hpp` in v4 of libsemigroups.
   template <typename Result, typename Word>
-  auto to(InversePresentation<Word> const& ip) noexcept -> std::enable_if_t<
+  [[deprecated]] auto
+  to(InversePresentation<Word> const& ip) noexcept -> std::enable_if_t<
       std::is_same_v<InversePresentation<typename Result::word_type>, Result>
           && !std::is_same_v<Word, typename Result::word_type>,
       Result> {
-    using WordOutput = typename Result::word_type;
-    return to<InversePresentation<WordOutput>>(ip, [&ip](auto val) {
-      return words::human_readable_letter<WordOutput>(ip.index(val));
-    });
+    return v4::to<Result>(ip);
   }
 
   // This function is documented above because Doxygen conflates these two
   // functions.
   template <typename Result, typename Word>
-  auto to(InversePresentation<Word> const& ip) noexcept
+  [[deprecated]] auto to(InversePresentation<Word> const& ip) noexcept
       -> std::enable_if_t<std::is_same_v<InversePresentation<Word>, Result>,
                           Result const&> {
-    return ip;
+    return v4::to<Result>(ip);
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -423,7 +497,8 @@ namespace libsemigroups {
   //!
   //! Defined in `to-presentation.hpp`.
   //!
-  //! Despite the hideous signature, this function should be invoked as follows:
+  //! Despite the hideous signature, this function should be invoked as
+  //! follows:
   //!
   //! \code
   //! to<InversePresentation>(p);
@@ -431,8 +506,8 @@ namespace libsemigroups {
   //!
   //! This function returns an inverse presentation with rules equivalent to
   //! those of the input presentation, but over a normalised alphabet. If the
-  //! alphabet of \p p is \f$\{a_0, a_1, \dots, a_{n-1}\}\f$, then the alphabet
-  //! of the returned inverse presentation will be
+  //! alphabet of \p p is \f$\{a_0, a_1, \dots, a_{n-1}\}\f$, then the
+  //! alphabet of the returned inverse presentation will be
   //! \f$\{0, 1, \dots, n-1, n, \dots, 2n-1\}\f$, where the inverse of letter
   //! \f$i\f$ is the letter \f$i + n\, (\text{mod }2n)\f$.
   //!
@@ -444,23 +519,27 @@ namespace libsemigroups {
   //!
   //! \throws LibsemigroupsException if `p.throw_if_bad_alphabet_or_rules()`
   //! throws.
-  // \note The parameter \p p must not be an `InversePresentation`, otherwise
-  // a compilation error is thrown.
-  // NOTE: not sure this is true anymore so just leaving it out
+//!
+//! \note This function will be moved from the header `to-presentation.hpp` to
+//! `presentation.hpp` in v4 of libsemigroups.
+// \note The parameter \p p must not be an `InversePresentation`, otherwise
+// a compilation error is thrown.
+// NOTE: not sure this is true anymore so just leaving it out
 #ifdef LIBSEMIGROUPS_PARSED_BY_DOXYGEN
   // FIXME(1) this is the same hack as elsewhere because Doxygen conflates
   // functions with trailing return type but the same name and signature.
   template <template <typename...> typename Thing, typename Word>
-  auto to(Presentation<Word> cont& p) -> std::enable_if_t<
+  auto to(Presentation<Word> const& p) -> std::enable_if_t<
       std::is_same_v<InversePresentation<Word>, Thing<Word>>,
       InversePresentation<Word>>;
 #else
   template <template <typename...> typename Thing, typename Word>
-  auto to(Presentation<Word> const& p) -> std::enable_if_t<
+  [[deprecated]] auto to(Presentation<Word> const& p) -> std::enable_if_t<
       std::is_same_v<InversePresentation<Word>, Thing<Word>>,
-      InversePresentation<Word>>;
+      InversePresentation<Word>> {
+    return v4::to<InversePresentation>(p);
+  }
 #endif
-
 }  // namespace libsemigroups
 
 #include "to-presentation.tpp"

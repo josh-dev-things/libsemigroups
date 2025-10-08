@@ -22,9 +22,9 @@ supporting the C++17 standard, `autoconf`, and `automake`. Building the
 documentation from source has some additional requirements that are
 detailed in the section [Building the documentation](index.md#building-the-documentation).
 
-### From the github repo
+### From the GitHub repo
 
-To build `libsemigroups` from the github repository:
+To build `libsemigroups` from the GitHub repository:
 
     git clone https://github.com/libsemigroups/libsemigroups
     cd libsemigroups
@@ -34,10 +34,10 @@ To build `libsemigroups` from the github repository:
 
 To build `libsemigroups` from a release archive:
 
-    curl -L -O https://github.com/libsemigroups/libsemigroups/releases/latest/download/libsemigroups-3.1.3.tar.gz
-    tar -xf libsemigroups-3.1.3.tar.gz
-    rm -f libsemigroups-3.1.3.tar.gz
-    cd libsemigroups-3.1.3
+    curl -L -O https://github.com/libsemigroups/libsemigroups/releases/latest/download/libsemigroups-3.2.0.tar.gz
+    tar -xf libsemigroups-3.2.0.tar.gz
+    rm -f libsemigroups-3.2.0.tar.gz
+    cd libsemigroups-3.2.0
     ./configure && make -j8 && sudo make install
 
 ## Configuration options
@@ -99,6 +99,12 @@ how to do this can be found on Doxygen's
 
 Then, it ought to be possible to just run `make doc` in the
 `libsemigroups` directory, and the documentation will be generated.
+
+Note that, if you are building the documentation having cloned `libsemigroups`
+from the GitHub repo, it is also necessary to check out the doxygen-awesome-css/
+submodule using:
+
+    git submodule update --init --recursive
 
 ## Issues
 

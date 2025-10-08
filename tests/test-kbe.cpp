@@ -25,6 +25,7 @@
 #include "libsemigroups/froidure-pin.hpp"     // for FroidurePin
 #include "libsemigroups/knuth-bendix.hpp"     // for KnuthBendix
 #include "libsemigroups/to-froidure-pin.hpp"  // for to<FroidurePin>
+#include "libsemigroups/to-presentation.hpp"  // for to<Presentation>
 #include "libsemigroups/transf.hpp"           // for Transf<>
 #include "libsemigroups/word-range.hpp"       // for literals
 
@@ -148,9 +149,7 @@ namespace libsemigroups {
       REQUIRE(kb.confluent());
 
       auto x = KBE(kb, 0);
-      REQUIRE(x.word(kb) == 0_w);
-      REQUIRE(x.string(kb)
-              == std::string(1, kb.presentation().letter_no_checks(0)));
+      REQUIRE(x.word() == 0_w);
     }
   }  // namespace detail
 }  // namespace libsemigroups

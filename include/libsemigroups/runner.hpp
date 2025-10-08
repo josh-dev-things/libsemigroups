@@ -186,7 +186,9 @@ namespace libsemigroups {
     //!
     //! \sa
     //! report_every(Time)
-    Reporter& report_every(nanoseconds val) noexcept {
+    //!
+    //! \deprecated_alias_warning
+    [[deprecated]] Reporter& report_every(nanoseconds val) noexcept {
       _last_report          = std::chrono::high_resolution_clock::now();
       _report_time_interval = val;
       return *this;
@@ -210,9 +212,14 @@ namespace libsemigroups {
     //! \noexcept
     //!
     //! \note This function is not thread-safe.
+    //!
+    //! \deprecated_alias_warning
     template <typename Time>
-    Reporter& report_every(Time t) noexcept {
+    [[deprecated]] Reporter& report_every(Time t) noexcept {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
       return report_every(nanoseconds(t));
+#pragma GCC diagnostic pop
     }
 
     //! \brief Get the minimum elapsed time between reports.
@@ -224,7 +231,9 @@ namespace libsemigroups {
     //! \noexcept
     //!
     //! \note This function is thread-safe.
-    [[nodiscard]] nanoseconds report_every() const noexcept {
+    //!
+    //! \deprecated_alias_warning
+    [[deprecated]] [[nodiscard]] nanoseconds report_every() const noexcept {
       return _report_time_interval;
     }
 
@@ -337,6 +346,7 @@ namespace libsemigroups {
     //!
     //! \note This function is not thread-safe.
     // Not noexcept because std::string::operator= isn't
+    // TODO(1) deprecate
     Reporter& report_divider(std::string const& val) {
       _divider = val;
       return *this;
@@ -353,6 +363,7 @@ namespace libsemigroups {
     //! \noexcept
     //!
     //! \note This function is thread-safe.
+    // TODO(1) deprecate
     [[nodiscard]] std::string const& report_divider() const noexcept {
       return _divider;
     }
@@ -572,6 +583,9 @@ namespace libsemigroups {
     //!
     // not noexcept because it calls timed_out which is not noexcept
     void report_why_we_stopped() const;
+
+    // TODO(doc)
+    std::string string_why_we_stopped() const;
 
     //! \brief Check if \ref run has been run to completion or not.
     //!

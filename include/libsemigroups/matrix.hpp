@@ -1321,8 +1321,10 @@ namespace libsemigroups {
     //!
     //! \tparam U  either \ref Row, \ref StaticRowView,
     // clang-format off
-    //! \ref DynamicRowViewStaticArith "DynamicRowView (compile-time arithmetic)", //NOLINT()
-    //! or \ref DynamicRowViewDynamicArith "DynamicRowView (run-time arithmetic)". //NOLINT()
+    // NOLINTNEXTLINE(whitespace/line_length)
+    //! \ref DynamicRowViewStaticArith "DynamicRowView (compile-time arithmetic)",
+    //! or
+    //! \ref DynamicRowViewDynamicArith "DynamicRowView (run-time arithmetic)".
     // clang-format on
     //!
     //! \param that \ref Row, \ref StaticRowView,
@@ -1464,8 +1466,12 @@ namespace libsemigroups {
   // DynamicRowViews - static arithmetic
   ////////////////////////////////////////////////////////////////////////
 
+#ifndef LIBSEMIGROUPS_PARSED_BY_DOXYGEN
+  // Doxygen needs to ignore this so that the actual implementation of
+  // DynamicRowView gets documented.
   template <typename... Args>
   class DynamicRowView;
+#endif
 
   //! \anchor DynamicRowViewStaticArith
   //!
@@ -5536,7 +5542,7 @@ namespace libsemigroups {
   //!    x\otimes y =
   //!    \begin{cases}
   //!    \min\{x + y, T\}   & \text{if } x \neq \infty\text{ and }y \neq
-  //!    \infty \\ \mbox
+  //!    \infty \\ \mbox{}
   //!    \infty & \text{if } x = \infty \text{ or }y = \infty;
   //!    \end{cases}
   //! \f]

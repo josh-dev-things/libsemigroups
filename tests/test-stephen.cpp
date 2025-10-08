@@ -607,7 +607,6 @@ namespace libsemigroups {
     REQUIRE(S.finished());
     S.run();
     stephen::set_word(S, to_word("abbbddbcbcbc"));  // resets
-    S.report_every(std::chrono::microseconds(10));
 
     S.run();
 
@@ -1347,7 +1346,7 @@ namespace libsemigroups {
                           "inverse presentation",
                           "[stephen][extreme]") {
     using words::                  operator+;
-    ReportGuard                    rg(true);
+    ReportGuard                    rg(false);
     v4::ToWord                     to_word("abcABC");
     InversePresentation<word_type> p;
     p.alphabet(to_word("abcABC"));

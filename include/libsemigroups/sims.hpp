@@ -1269,7 +1269,7 @@ namespace libsemigroups {
 
         // TODO(1) (Sims1) ensure that _felsch_graph's settings are
         // properly initialised
-        FelschGraph<word_type, node_type, std::vector<Definition>>
+        FelschGraph<WordGraphWithSources<uint32_t>, std::vector<Definition>>
             _felsch_graph;
 
         // This mutex does nothing for iterator, only does something for
@@ -1557,7 +1557,8 @@ namespace libsemigroups {
     friend class sims::const_cgp_iterator;
 
     using felsch_graph_type
-        = detail::FelschGraph<word_type, node_type, std::vector<Definition>>;
+        = detail::FelschGraph<detail::WordGraphWithSources<uint32_t>,
+                              std::vector<Definition>>;
 
    public:
     //! Default constructor
@@ -1663,7 +1664,7 @@ namespace libsemigroups {
     //! \throws LibsemigroupsException if \p n is \c 0.
     //! \throws LibsemigroupsException if `presentation()` has 0-generators
     //! and 0-relations (i.e. it has not been initialised).
-    uint64_t number_of_congruences(size_t n);
+    uint64_t number_of_congruences(size_type n) const;
 
     //! \brief Apply a unary predicate to every one-sided congruence with at
     //! most a given number of classes.
@@ -1907,7 +1908,7 @@ namespace libsemigroups {
     Sims2& init();
 
     //! \copydoc Sims1::number_of_congruences
-    uint64_t number_of_congruences(size_t n);
+    uint64_t number_of_congruences(size_type n) const;
 
     //! \copydoc Sims1::for_each
     void for_each(size_type                                   n,

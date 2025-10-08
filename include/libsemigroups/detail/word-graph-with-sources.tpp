@@ -112,25 +112,23 @@ namespace libsemigroups {
         std::vector<node_type> const& q,
         size_t                        m) {
       // p : new -> old, q = p ^ -1
-      node_type c = 0;
       // Permute all the values in the _table, and pre-images, that relate
-      // to active cosets
-      while (c < m) {
-        for (auto x : WordGraph<Node>::labels()) {
-          node_type i = WordGraph<Node>::target_no_checks(p[c], x);
+      // to active nodes
+      size_t const n = out_degree();
+      for (node_type s = 0; s < m; ++s) {
+        for (label_type a = 0; a < n; ++a) {
+          node_type t = WordGraph<Node>::target_no_checks(p[s], a);
           WordGraph<Node>::target_no_checks(
-              p[c], x, (i == UNDEFINED ? i : q[i]));
-          i = _preim_init.get(p[c], x);
-          _preim_init.set(p[c], x, (i == UNDEFINED ? i : q[i]));
-          i = _preim_next.get(p[c], x);
-          _preim_next.set(p[c], x, (i == UNDEFINED ? i : q[i]));
+              p[s], a, (t == UNDEFINED ? t : q[t]));
+          t = _preim_init.get(p[s], a);
+          _preim_init.set(p[s], a, (t == UNDEFINED ? t : q[t]));
+          t = _preim_next.get(p[s], a);
+          _preim_next.set(p[s], a, (t == UNDEFINED ? t : q[t]));
         }
-        c++;
       }
       // Permute the rows themselves
-      WordGraph<Node>::apply_row_permutation(p);
-      _preim_init.apply_row_permutation(p);
-      _preim_next.apply_row_permutation(p);
+      detail::dynamic_array2::apply_row_permutation_no_checks(
+          p, this->_dynamic_array_2, _preim_init, _preim_next);
     }
 
     template <typename Node>
@@ -194,7 +192,7 @@ namespace libsemigroups {
 
     template <typename Node>
     template <typename NewEdgeFunc, typename IncompatibleFunc>
-    void WordGraphWithSources<Node>::merge_nodes_no_checks(
+    uint64_t WordGraphWithSources<Node>::merge_nodes_no_checks(
         node_type          min,
         node_type          max,
         NewEdgeFunc&&      new_edge,
@@ -202,34 +200,34 @@ namespace libsemigroups {
       LIBSEMIGROUPS_ASSERT(min < max);
       LIBSEMIGROUPS_ASSERT(min < number_of_nodes());
       LIBSEMIGROUPS_ASSERT(max < number_of_nodes());
+      uint64_t num_edges_removed = 0;
       for (auto i : WordGraph<Node>::labels()) {
-        // v -> max is an edge
         node_type v = first_source_no_checks(max, i);
         while (v != UNDEFINED) {
           auto w = next_source_no_checks(v, i);
-          if (WordGraph<Node>::target_no_checks(v, i) != min) {
-            target_no_checks(v, i, min);
-            new_edge(v, i);
-          }
+          LIBSEMIGROUPS_ASSERT(WordGraph<Node>::target_no_checks(v, i) != min);
+          LIBSEMIGROUPS_ASSERT(WordGraph<Node>::target_no_checks(v, i) == max);
+          target_no_checks(v, i, min);
+          new_edge(v, i);
           v = w;
         }
 
-        // Now let <v> be the IMAGE of <max>
         v = WordGraph<Node>::target_no_checks(max, i);
         if (v != UNDEFINED) {
+          num_edges_removed++;
           remove_source_no_checks(v, i, max);
-          // Let <u> be the image of <min>, and ensure <u> = <v>
-          node_type u = WordGraph<Node>::target_no_checks(min, i);
+          node_type const u = WordGraph<Node>::target_no_checks(min, i);
           if (u == UNDEFINED) {
-            if (WordGraph<Node>::target_no_checks(min, i) != min) {
-              target_no_checks(min, i, v);
-              new_edge(min, i);
-            }
+            LIBSEMIGROUPS_ASSERT(u != min);
+            target_no_checks(min, i, v);
+            new_edge(min, i);
+            num_edges_removed--;
           } else if (u != v) {
             incompat(u, v);
           }
         }
       }
+      return num_edges_removed;
     }
 
     // Is d a source of c under x?
