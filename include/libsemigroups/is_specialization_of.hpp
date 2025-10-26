@@ -41,8 +41,8 @@ namespace libsemigroups {
   //!
   //! \par Example
   //! \code
-  //! is_specialization_of<std::vector<int>, std::vector>::value // true
-  //! is_specialization_of<std::vector<int>, std::unordered_map>::value
+  //! is_specialization_of<std::vector<int>, std::vector>::value; // true
+  //! is_specialization_of<std::vector<int>, std::unordered_map>::value;
   //! // false
   //! \endcode
   //!
@@ -71,8 +71,8 @@ namespace libsemigroups {
   //!
   //! \par Example
   //! \code
-  //! is_specialization_of_v<std::vector<int>, std::vector> // true
-  //! is_specialization_of_v<std::vector<int>, std::unordered_map> // false
+  //! is_specialization_of_v<std::vector<int>, std::vector>; // true
+  //! is_specialization_of_v<std::vector<int>, std::unordered_map>; // false
   //! \endcode
   //!
   //! \note The template parameters of \p Primary must be types, so, for

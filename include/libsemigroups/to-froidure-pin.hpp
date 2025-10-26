@@ -88,6 +88,7 @@ namespace libsemigroups {
   //! Despite the hideous signature, this function should be invoked as follows:
   //!
   //! \code
+  //! \skip-test
   //! to<FroidurePin>(cong);
   //! \endcode
   //!
@@ -120,6 +121,7 @@ namespace libsemigroups {
   //! Despite the hideous signature, this function should be invoked as follows:
   //!
   //! \code
+  //! \skip-test
   //! to<FroidurePin>(k);
   //! \endcode
   //!
@@ -158,6 +160,7 @@ namespace libsemigroups {
   //! Despite the hideous signature, this function should be invoked as follows:
   //!
   //! \code
+  //! \skip-test
   //! to<FroidurePin>(kb);
   //! \endcode
   //!
@@ -192,6 +195,7 @@ namespace libsemigroups {
   //! Despite the hideous signature, this function should be invoked as follows:
   //!
   //! \code
+  //! \skip-test
   //! to<FroidurePin>(k);
   //! \endcode
   //!
@@ -225,6 +229,7 @@ namespace libsemigroups {
   //! Despite the hideous signature, this function should be invoked as follows:
   //!
   //! \code
+  //! \skip-test
   //! to<FroidurePin>(kb);
   //! \endcode
   //!
@@ -265,6 +270,7 @@ namespace libsemigroups {
   //! as follows (for example):
   //!
   //! \code
+  //! \skip-test
   //! to<FroidurePin<Transf<>>(wg, 0, 10);
   //! \endcode
   //!
